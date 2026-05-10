@@ -60,7 +60,8 @@ export const useVoice = () => {
       
       await audio.play();
     } catch (err) {
-      console.warn('ElevenLabs fallou, usando voz do sistema:', err.message);
+      console.error('CRITICAL: ElevenLabs failed!', err.message);
+      console.warn('Usando voz robótica do sistema como fallback.');
       speakWithBrowser(text);
     }
   }, [stop, speakWithBrowser]);

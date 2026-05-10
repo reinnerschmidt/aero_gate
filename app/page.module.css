@@ -1,12 +1,13 @@
 .main {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 1.5rem;
   background: radial-gradient(circle at 50% -20%, #111827, #05070a);
+  overflow-y: auto; /* Allow scrolling on small screens */
 }
 
 .inputField {
@@ -29,29 +30,31 @@
 }
 
 .progress {
-  position: absolute;
-  bottom: 2rem;
+  margin-top: 2rem;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .choiceContainer {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
   justify-content: center;
+  flex-wrap: wrap; /* Wrap buttons on mobile */
 }
 
 .btnSecondary {
   background: rgba(255, 255, 255, 0.05);
   color: white;
-  padding: 1rem 3rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 12px;
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
+  flex: 1;
+  min-width: 120px;
 }
 
 .btnSecondary:hover {
@@ -60,13 +63,25 @@
 }
 
 .successIcon {
-  font-size: 5rem;
+  font-size: clamp(3rem, 15vw, 5rem);
   color: var(--success);
-  margin: 1rem 0;
+  margin: 0.5rem 0;
   animation: scaleUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes scaleUp {
   from { transform: scale(0.5); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .main {
+    justify-content: flex-start;
+    padding-top: 1rem;
+  }
+  
+  .progress {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
 }

@@ -1,11 +1,11 @@
 .container {
-  width: 90%;
+  width: 95%;
   max-width: 600px;
-  padding: 3rem;
+  padding: 2.5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  min-height: 400px;
+  gap: 1.5rem;
+  min-height: auto;
   position: relative;
 }
 
@@ -14,11 +14,12 @@
 }
 
 .title {
+  font-size: clamp(1.8rem, 8vw, 2.5rem);
   margin-bottom: 0.5rem;
 }
 
 .description {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .content {
@@ -27,7 +28,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
+  width: 100%;
 }
 
 .footer {
@@ -36,21 +38,9 @@
   padding-top: 1rem;
 }
 
-.inputField {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.2rem;
-  border-radius: 12px;
-  color: white;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.inputField:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.2);
+@media (max-width: 768px) {
+  .container {
+    padding: 2rem 1rem;
+    gap: 1rem;
+  }
 }
