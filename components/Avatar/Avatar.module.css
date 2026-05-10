@@ -93,7 +93,7 @@
 /* Mobile Specific Adjustments */
 @media (max-width: 768px) {
   .avatarWrapper {
-    max-width: 350px;
+    max-width: 280px; /* Reduced from 350px */
   }
   
   .bubble {
