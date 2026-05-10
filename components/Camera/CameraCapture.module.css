@@ -19,7 +19,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scaleX(-1); /* Mirror effect for frontal camera */
+  transform: scaleX(-1); /* Mirror for user-facing camera */
 }
 
 .overlay {

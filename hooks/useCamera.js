@@ -13,26 +13,21 @@ export const useCamera = () => {
         stream.getTracks().forEach(track => track.stop());
       }
 
-      // Enumerate devices to find the best camera
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoDevices = devices.filter(device => device.kind === 'videoinput');
-      
-      // Try to find a device with "front" in the label, otherwise use facingMode
-      const frontCamera = videoDevices.find(device => 
-        device.label.toLowerCase().includes('front') || 
-        device.label.toLowerCase().includes('frontal') ||
-        device.label.toLowerCase().includes('integrada')
-      );
-
-      const constraints = frontCamera 
-        ? { video: { deviceId: { exact: frontCamera.deviceId } } }
-        : { video: { facingMode: 'user' } };
+      // Simplificado para melhor compatibilidade em celulares (iOS/Android)
+      // O facingMode: 'user' é o padrão mais confiável para câmera frontal
+      const constraints = {
+        video: {
+          facingMode: 'user',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      };
 
       let newStream;
       try {
         newStream = await navigator.mediaDevices.getUserMedia(constraints);
       } catch (e) {
-        console.warn('Strict constraints failed, trying generic video:', e);
+        console.warn('Câmera frontal específica falhou, tentando qualquer câmera:', e);
         newStream = await navigator.mediaDevices.getUserMedia({ video: true });
       }
 
@@ -40,14 +35,18 @@ export const useCamera = () => {
       
       if (videoRef.current) {
         videoRef.current.srcObject = newStream;
+        // Importante: muted e playsInline já devem estar no elemento, 
+        // mas forçamos o play aqui com tratamento de erro
         videoRef.current.onloadedmetadata = () => {
-          videoRef.current.play().catch(console.error);
+          videoRef.current.play().catch(err => {
+            console.error('Erro ao dar play no vídeo:', err);
+          });
         };
       }
       setError(null);
     } catch (err) {
-      console.error('Error accessing camera:', err);
-      setError('Não foi possível acessar a câmera. Verifique se o navegador tem permissão e se o dispositivo não está sendo usado por outro app.');
+      console.error('Erro crítico de câmera:', err);
+      setError('Câmera indisponível. Verifique as permissões do navegador.');
     }
   }, [stream]);
 
@@ -64,8 +63,9 @@ export const useCamera = () => {
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
       const ctx = canvas.getContext('2d');
+      // No mobile, muitas vezes não precisamos inverter, mas se precisar, adicionamos aqui
       ctx.drawImage(videoRef.current, 0, 0);
-      return canvas.toDataURL('image/jpeg');
+      return canvas.toDataURL('image/jpeg', 0.8);
     }
     return null;
   }, []);
