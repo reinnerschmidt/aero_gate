@@ -2,108 +2,25 @@
   width: 100vw;
   min-height: 100vh;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: stretch;
-  background: #05070a;
-  overflow: hidden;
-}
-
-.spectrumPanel {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-  display: none;
-}
-
-@media (min-width: 900px) {
-  .spectrumPanel {
-    display: block;
-  }
-}
-
-.spectrumBg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.spectrumBgTalking {
-  animation: electricalPulse 0.4s infinite alternate ease-in-out;
-}
-
-@keyframes electricalPulse {
-  0% { filter: brightness(1) contrast(1) saturate(1); }
-  50% { filter: brightness(1.8) contrast(1.3) saturate(1.5) drop-shadow(0 0 20px #00c8ff); }
-  100% { filter: brightness(1.2) contrast(1.1) saturate(1.2); }
-}
-
-.energyGlow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(0, 200, 255, 0.25) 0%, transparent 70%);
-  mix-blend-mode: screen;
-  pointer-events: none;
-  animation: glowPulse 0.8s infinite alternate;
-}
-
-@keyframes glowPulse {
-  from { opacity: 0.3; transform: scale(0.9); }
-  to { opacity: 0.8; transform: scale(1.05); }
-}
-
-.speakerBadge {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 200, 255, 0.3);
-  border-radius: 50px;
-  padding: 0.6rem 1.2rem;
-  color: white;
-  font-size: 1.2rem;
-  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  gap: 0.5rem;
-  z-index: 5;
+  background: #05070a;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .questionPanel {
   width: 100%;
-  max-width: 540px;
+  max-width: 600px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 2rem 1.5rem;
-  overflow-y: auto;
-}
-
-/* bubble styles moved here since Avatar is removed from main layout */
-.bubble {
-  position: absolute;
-  top: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  border: 2px solid #00c8ff;
-  padding: 0.8rem 1.4rem;
-  border-radius: 20px;
-  color: #1a1a1a;
-  font-size: 1rem;
-  font-weight: 500;
-  max-width: 80%;
-  text-align: center;
-  z-index: 10;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 0 auto;
+  gap: 1rem;
 }
 
 

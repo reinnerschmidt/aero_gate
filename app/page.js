@@ -39,7 +39,7 @@ const STEPS = [
     title: 'Identificação',
     description: 'Sua chapa de identificação.',
     type: 'input',
-    placeholder: 'Número da chapa',
+    placeholder: 'Número da chapa (6 dígitos)',
     text: 'Qual a sua chapa?'
   },
   {
@@ -179,6 +179,10 @@ export default function Home() {
   }, [currentStepId]);
 
   const getStepText = () => {
+    if (adornAlert) {
+      const artigo = ['aliança', 'chave'].includes(adornAlert.item) ? 'sua' : 'seu';
+      return `Por favor, retire ${artigo} ${adornAlert.item} e deposite no porta-objetos da entrada da aeronave antes de prosseguir.`;
+    }
     if (currentStepId === 'damage_alert' && damageInfo !== null) {
       return damageInfo.total_danos > 0 
         ? `Cuidado! A área do ${formData.area_id} já teve ${damageInfo.total_danos} danos dentro do avião selecionado.`
@@ -203,6 +207,12 @@ export default function Home() {
       lastStepSpoken.current = currentStepId;
     }
   }, [currentStepId, isStarted, speak]);
+
+  useEffect(() => {
+    if (adornAlert) {
+      speak(getStepText());
+    }
+  }, [adornAlert]);
 
   const handleStart = () => {
     setIsStarted(true);
@@ -253,6 +263,15 @@ export default function Home() {
       const isOM = /^7\d{7}$/.test(v);
       if (!isOP && !isOM) {
         alert('Número inválido!\n• OP deve começar com 4 e ter 8 dígitos (ex: 40001234)\n• OM deve começar com 7 e ter 8 dígitos (ex: 70001234)');
+        return;
+      }
+    }
+
+    // Validação específica para Chapa (Embraer)
+    if (currentStepId === 'id_number' && formData.employee_type === 'Embraer') {
+      const v = (value || '').trim();
+      if (!/^\d{6}$/.test(v)) {
+        alert('A chapa Embraer deve conter exatamente 6 dígitos numéricos.');
         return;
       }
     }
@@ -421,27 +440,9 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {/* Left Panel: Spectrum Animation */}
-      <div className={styles.spectrumPanel}>
-        <img
-          src="/spectrum.png?v=3"
-          alt="Spectrum"
-          className={`${styles.spectrumBg} ${isTalking ? styles.spectrumBgTalking : ''}`}
-        />
-        {isTalking && <div className={styles.energyGlow} />}
-        {getStepText() && (
-          <div className={styles.bubble}>{getStepText()}</div>
-        )}
-        <div className={styles.speakerBadge}>
-          <span>{isTalking ? '🔊' : '🔈'}</span>
-          <span style={{ fontSize: '0.85rem', opacity: 0.8 }}>
-            {isTalking ? 'Falando...' : 'Sistema de Voz'}
-          </span>
-        </div>
-      </div>
-
       {/* Right Panel: Question Flow */}
       <div className={styles.questionPanel}>
+        <Avatar text={getStepText()} isTalking={isTalking} />
         {accessDenied && (
           <div className="glass animate-fade" style={{ padding: '3rem', textAlign: 'center', borderColor: '#ff4444', width: '100%', maxWidth: '500px', margin: 'auto' }}>
             <span style={{ fontSize: '4rem', marginBottom: '1rem', display: 'block' }}>🚫</span>
@@ -577,10 +578,24 @@ export default function Home() {
       {adornAlert && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
           <div className="glass animate-fade" style={{ padding: '3rem', textAlign: 'center', maxWidth: '500px', border: '2px solid var(--primary)' }}>
-            <span style={{ fontSize: '4rem', marginBottom: '1rem', display: 'block' }}>💍</span>
+            {(() => {
+              const adornoImages = {
+                'aliança': '/alianca.png',
+                'chave': '/chave.png',
+                'relógio': '/relogio.png',
+                'crachá': '/cracha.png'
+              };
+              return (
+                <img 
+                  src={adornoImages[adornAlert.item]} 
+                  alt={adornAlert.item}
+                  style={{ width: '150px', height: '150px', objectFit: 'contain', marginBottom: '1.5rem', filter: 'drop-shadow(0 0 15px rgba(0,209,255,0.5))' }}
+                />
+              );
+            })()}
             <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Atenção: {adornAlert.item.toUpperCase()}</h2>
             <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6' }}>
-              Por favor, <strong>retire</strong> seu(sua) {adornAlert.item} e <strong>deposite no porta-objetos</strong> da entrada da aeronave antes de prosseguir.
+              Por favor, <strong>retire</strong> {['aliança', 'chave'].includes(adornAlert.item) ? 'sua' : 'seu'} {adornAlert.item} e <strong>deposite no porta-objetos</strong> da entrada da aeronave antes de prosseguir.
             </p>
             <button 
               className="btn-primary" 
