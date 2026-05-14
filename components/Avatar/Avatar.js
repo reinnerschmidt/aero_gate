@@ -15,19 +15,22 @@ export default function Avatar({ text, isTalking }) {
       <div className={`${styles.avatarWrapper} ${isTalking ? styles.talking : ''}`}>
         <div className={styles.imageContainer}>
           <Image 
-            src="/cartoon_avatar.png" 
-            alt="Embraer KC-390 Avatar" 
+            src="/spectrum.png?v=2" 
+            alt="Spectrum Audio" 
             fill
-            className={styles.avatar}
+            className={`${styles.avatar} ${isTalking ? styles.avatarTalking : ''}`}
             priority
           />
           
-          {/* Animated Mouth for the Cartoon Face */}
+          {/* Energy Glow Overlay */}
           {isTalking && (
-            <div className={styles.mouthWrapper}>
-              <div className={styles.mouth} />
-            </div>
+            <div className={styles.energyGlow} />
           )}
+
+          {/* Speaker Icon Indicator */}
+          <div className={styles.speakerIndicator}>
+             <span style={{ fontSize: '1.5rem' }}>{isTalking ? '🔊' : '🔈'}</span>
+          </div>
         </div>
       </div>
     </div>
